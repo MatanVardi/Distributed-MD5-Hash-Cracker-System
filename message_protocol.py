@@ -4,7 +4,6 @@ MAX_MESSAGE_SIZE = 4096
 
 class Protocol:
     def make_hello(self, client_name, processes):
-
         return {
             "version": 1,
             "type": "HELLO",
@@ -13,7 +12,6 @@ class Protocol:
         }
 
     def make_welcome(self, server_name, hash_algorithm, target_hash):
-
         return {
             "version": 1,
             "type": "WELCOME",
