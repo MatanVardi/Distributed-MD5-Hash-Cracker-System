@@ -1,7 +1,7 @@
 DEFAULT_PORT = 50505
 MAX_MESSAGE_SIZE = 4096
 
-
+#This will be used in the client and server accordingly
 class Protocol:
     def hello(self, client_name, processes):
         return {
