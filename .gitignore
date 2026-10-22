@@ -1,0 +1,35 @@
+# --- Virtual Environments ---
+# Ignore your local virtual environments. They are large and computer-specific.
+.venv/
+venv/
+env/
+ENV/
+
+# --- Python Bytecode & Cache ---
+# Ignore compiled Python files (they auto-generate and clutter git commits).
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Environment Variables & Secrets ---
+# NEVER commit your secrets, passwords, or API keys to GitHub!
+.env
+.env.local
+.env.*.local
+
+# --- Operating System Files ---
+# Prevent OS-specific folder clutter
+.DS_Store
+Thumbs.db
+
+# --- Testing & Coverage ---
+# Ignore test runner artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- IDEs & Editors ---
+# Ignore local workspace settings (let team members use their own settings)
+.vscode/
+.idea/
