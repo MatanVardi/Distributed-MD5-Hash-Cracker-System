@@ -3,7 +3,7 @@ MAX_MESSAGE_SIZE = 4096
 
 
 class Protocol:
-    def make_hello(self, client_name, processes):
+    def hello(self, client_name, processes):
         return {
             "version": 1,
             "type": "HELLO",
@@ -11,7 +11,7 @@ class Protocol:
             "processes": processes,
         }
 
-    def make_welcome(self, server_name, hash_algorithm, target_hash):
+    def welcome(self, server_name, hash_algorithm, target_hash):
         return {
             "version": 1,
             "type": "WELCOME",
@@ -32,4 +32,30 @@ class Protocol:
             "end": end,
             "target_hash": target_hash,
             "lease_seconds": lease_seconds,
+        }
+
+    def done(self, job_id, checked):
+        return {"version": 1, "type": "DONE", "job_id": job_id, "checked": checked}
+
+    def found(self, job_id, number, calculated_hash):
+        return {
+            "version": 1,
+            "type": "FOUND",
+            "job_id": job_id,
+            "number": number,
+            "calculated_hash": calculated_hash,
+        }
+
+    def stop(self, number):
+        return {"version": 1, "type": "STOP", "number": number}
+
+    def no_more_work(self):
+        return {"version": 1, "type": "NO_MORE_WORK"}
+
+    def error(self, code, message):
+        return {
+            "version": 1,
+            "type": "ERROR",
+            "code": code,
+            "message": message,
         }
