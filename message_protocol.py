@@ -1,10 +1,11 @@
 DEFAULT_PORT = 50505
 MAX_MESSAGE_SIZE = 4096
+PROTOCOL_VERSION = 1
 
 
 def hello(client_name, processes):
     return {
-        "version": 1,
+        "version": PROTOCOL_VERSION,
         "type": "HELLO",
         "client_name": client_name,
         "processes": processes,
@@ -13,7 +14,7 @@ def hello(client_name, processes):
 
 def welcome(server_name, hash_algorithm, target_hash):
     return {
-        "version": 1,
+        "version": PROTOCOL_VERSION,
         "type": "WELCOME",
         "server_name": server_name,
         "algorithm": hash_algorithm,
@@ -22,12 +23,12 @@ def welcome(server_name, hash_algorithm, target_hash):
 
 
 def request_work():
-    return {"version": 1, "type": "REQUEST_WORK"}
+    return {"version": PROTOCOL_VERSION, "type": "REQUEST_WORK"}
 
 
 def work(job_id, start, end, target_hash, lease_seconds):
     return {
-        "version": 1,
+        "version": PROTOCOL_VERSION,
         "type": "WORK",
         "job_id": job_id,
         "start": start,
@@ -38,7 +39,12 @@ def work(job_id, start, end, target_hash, lease_seconds):
 
 
 def done(job_id, checked):
-    return {"version": 1, "type": "DONE", "job_id": job_id, "checked": checked}
+    return {
+        "version": PROTOCOL_VERSION,
+        "type": "DONE",
+        "job_id": job_id,
+        "checked": checked,
+    }
 
 
 def found(job_id, number, calculated_hash):
@@ -52,16 +58,16 @@ def found(job_id, number, calculated_hash):
 
 
 def stop(number):
-    return {"version": 1, "type": "STOP", "number": number}
+    return {"version": PROTOCOL_VERSION, "type": "STOP", "number": number}
 
 
 def no_more_work():
-    return {"version": 1, "type": "NO_MORE_WORK"}
+    return {"version": PROTOCOL_VERSION, "type": "NO_MORE_WORK"}
 
 
 def error(code, message):
     return {
-        "version": 1,
+        "version": PROTOCOL_VERSION,
         "type": "ERROR",
         "code": code,
         "message": message,
