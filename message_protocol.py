@@ -1,7 +1,7 @@
 DEFAULT_PORT = 50505
 MAX_MESSAGE_SIZE = 4096
 PROTOCOL_VERSION = 1
-
+PROTOCOL_IP = "127.0.0.1"
 
 def hello(client_name, processes):
     return {
@@ -49,7 +49,7 @@ def done(job_id, checked):
 
 def found(job_id, number, calculated_hash):
     return {
-        "version": 1,
+        "version": PROTOCOL_VERSION,
         "type": "FOUND",
         "job_id": job_id,
         "number": number,
