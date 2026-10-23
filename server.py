@@ -17,6 +17,7 @@ class Server:
         self.range_end = 10000000
         self.range_start = 0
         self.chunk_size = 100000
+        self.lease_seconds = 60
 
         self.jobs = {}
         self.next_job_id = 1
@@ -25,7 +26,8 @@ class Server:
         self.lock = threading.Lock()
 
     def send_message(self, sock, message):
-        data = json.dumps(message) + "\n"
+        data = json.dumps(message, separators=(",", ":")) + "\n"
+        print(f"  -> {data.strip()}")
         sock.sendall(data.encode("utf-8"))
 
     def receive_message(self, reader):
@@ -39,14 +41,14 @@ class Server:
             if self.found is not None:
                 reply = message_protocol.stop(self.found)
 
-            elif self.range_start >= self.range_end:
+            elif self.range_start > self.range_end:
                 reply = message_protocol.no_more_work()
 
             else:
                 start = self.range_start
-                end = min(start + self.chunk_size, self.range_end)
+                end = min(start + self.chunk_size - 1, self.range_end)
 
-                job_id = self.next_job_id
+                job_id = f"job-{self.next_job_id:06d}"
                 self.next_job_id += 1
 
                 self.jobs[job_id] = {
@@ -57,7 +59,7 @@ class Server:
                     "status": "assigned",
                 }
 
-                self.range_start = end
+                self.range_start = end + 1
                 reply = message_protocol.work(
                     job_id, start, end, self.target_hash, self.lease_seconds
                 )
@@ -89,9 +91,14 @@ class Server:
                 job["status"] = "done"
 
     def handle_found(self, sock, message):
+        job = self.jobs.get(message.get("job_id"))
         number = message["number"]
 
         calculated = hashlib.new(self.algorithm, str(number).encode()).hexdigest()
+
+        if job is None:
+            self.send_message(sock, message_protocol.error("UNKNOWN_JOB", "No such job"))
+            return
 
         if calculated == self.target_hash:
             with self.lock:
