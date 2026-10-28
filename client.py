@@ -133,8 +133,8 @@ class Client:
 
 
 if __name__ == "__main__":
-    host = input("Server IP: ") or message_protocol.PROTOCOL_IP
-    port = int(input("Port: ") or message_protocol.DEFAULT_PORT)
+    host = message_protocol.PROTOCOL_IP
+    port = message_protocol.DEFAULT_PORT
 
     with multiprocessing.Pool(PROCESSES) as pool:
         Client(host, port).run(pool)
